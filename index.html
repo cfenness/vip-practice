@@ -14,8 +14,11 @@
       text-align: center;
     }
     
-    .dropdown {
-      width: 100%;
+    .light-table-filter {
+      margin-left: auto;
+      margin-right: auto;
+      width: 90%;
+      float: none;
     }
 
     #myInput{
@@ -101,38 +104,10 @@
         <h1 class="display-4">September Supplier Sales</h1>
         <p class="lead">Select on the Appropriate Dropdowns to select filter the September Sales Data.</p>
       </div>
-
       <div class="row">
-        <div class="col-lg-1">
-
-        </div>
-        <div class="col-lg-2">
-          <label for="DLSupplier" class="dropdownLabel">Supplier: </label>
-          <select id="DLSupplier" class="dropdown" data-table="order-table"></select>
-        </div>
-        <div class="col-lg-2">
-          <label for="DLType" class="dropdownLabel">Type: </label>
-          <select id="DLType" class="dropdown" onchange='filterType'></select>
-        </div>
-        <div class="col-lg-2">
-          <label for="DLBrand" class="dropdownLabel">Brand: </label>
-          <select id="DLBrand" class="dropdown" onchange='filterBrand'></select>
-        </div>
-        <div class="col-lg-2">
-          <label for="DLInvoiceDateBeginning" class="dropdownLabel">Start</label>  
-          <input type="date" id="start" class="dropdown" name="trip"
-            value="2017-09-01"
-            min="2017-09-01" max="2017-09-30" />
-        </div>
-        <div class="col-lg-2">
-          <label for="DLInvoiceDateEnding" class="dropdownLabel">End</label>
-          <input type="date" id="ending" class="dropdown" name="trip"
-            value="2017-09-30"
-            min="2017-09-01" max="2017-09-30" />
-        </div>
-        <div class="col-lg-1">
-
-        </div>
+        <input type="search" class="light-table-filter" data-table="order-table" placeholder="Search Table" />
+      </div>
+      <div class="row">
       </div>
     </div>
   <!--Body-->
@@ -249,44 +224,40 @@ var listBrandItems = '<option selected="selected" value="0">- Select -</option>'
 
     });  
 
-// Run Query
-// ==========================================
-  runTableQuery();
-
 //Dropdown functionality
 (function(document) {
-	'use strict';  
-  
-  var LightTableFilter = (function(Arr) {
+	'use strict';
 
-    var _select;
+	var LightTableFilter = (function(Arr) {
 
-function _onSelectEvent(e) {
-			_select = e.target;
-			var tables = document.getElementsByClassName(_select.getAttribute('data-table'));
+		var _input;
+
+		function _onInputEvent(e) {
+			_input = e.target;
+			var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
 			Arr.forEach.call(tables, function(table) {
 				Arr.forEach.call(table.tBodies, function(tbody) {
-					Arr.forEach.call(tbody.rows, _filterSelect);
+					Arr.forEach.call(tbody.rows, _filter);
 				});
 			});
-    }
+		}
 
-function _filterSelect(row) {
-     
-     var text_select = row.textContent.toLowerCase(), val_select = _select.options[_select.selectedIndex].value.toLowerCase();
-     row.style.display = text_select.indexOf(val_select) === -1 ? 'none' : 'table-row';
+		function _filter(row) {
+      
+			var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
 
-   }
+		}
 
-return {
+		return {
 			init: function() {
-				var selects = document.getElementById('DLSupplier');
-				Arr.forEach.call(selects, function(select) {
-         select.onchange  = _onSelectEvent;
+				var inputs = document.getElementsByClassName('light-table-filter');
+				Arr.forEach.call(inputs, function(input) {
+					input.oninput = _onInputEvent;
 				});
 			}
 		};
-  })(Array.prototype);
+	})(Array.prototype);
 
 	document.addEventListener('readystatechange', function() {
 		if (document.readyState === 'complete') {
@@ -295,6 +266,12 @@ return {
 	});
 
 })(document);
+
+// Run Query
+// ==========================================
+  runTableQuery();
+
+
 
 </script>
 </html>
