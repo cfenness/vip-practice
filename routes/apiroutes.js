@@ -1,9 +1,9 @@
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
-  host: "us-cdbr-iron-east-01.cleardb.net",
-  user: "b4fc3b838b03b3",
-  password: "b032b96e",
-  database: "heroku_d4967fa2661e836"
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "vipdb"
 });
 
 
