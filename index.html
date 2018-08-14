@@ -108,15 +108,15 @@
         </div>
         <div class="col-lg-2">
           <label for="DLSupplier" class="dropdownLabel">Supplier: </label>
-          <select id="DLSupplier" class="dropdown"></select>
+          <select id="DLSupplier" class="dropdown" data-table="order-table"></select>
         </div>
         <div class="col-lg-2">
           <label for="DLType" class="dropdownLabel">Type: </label>
-          <select id="DLType" class="dropdown"></select>
+          <select id="DLType" class="dropdown" onchange='filterType'></select>
         </div>
         <div class="col-lg-2">
           <label for="DLBrand" class="dropdownLabel">Brand: </label>
-          <select id="DLBrand" class="dropdown"></select>
+          <select id="DLBrand" class="dropdown" onchange='filterBrand'></select>
         </div>
         <div class="col-lg-2">
           <label for="DLInvoiceDateBeginning" class="dropdownLabel">Start</label>  
@@ -138,7 +138,8 @@
   <!--Body-->
     <div class="row">
       <div class="col-lg dataTable">
-          <table id="supplierTable" border='1'>
+          <table class="order-table"  border='1'>
+            <thead>
             <tr>
                 <th id="idColumn">ID</th>
                 <th id="supplierColumn">Supplier</th>
@@ -151,6 +152,8 @@
                 <th id="qtySoldColumn">Quantity Sold</th>
                 <th id="dollarsSoldColumn">Dollars Sold</th>
             </tr>
+          </thead>
+          <tbody id="supplierTable"></tbody>
           </table>
       </div>
     </div>
@@ -189,12 +192,6 @@
 
           $("#" + i).append("<td>" + results[i].id + "</td><td>" + results[i].supplier + "</td><td>" + results[i].type + "</td><td>" + results[i].brand + "</td><td>" + results[i].countryOfOrigin + "</td><td>" + results[i].bottlesPerCase + "</td><td>" + results[i].invoiceNumber + "</td><td>" + results[i].invoiceDate + "</td><td>" + results[i].qtySold + "</td><td>$" + results[i].dollarsSold + "</td>");
           
-        // Create the Supplier Dropdown and populate with data
-          // var selectSupplier = $("select");
-          // selectSupplier.addClass('supplierFilter');
-          // $('.jumbotron').append(dropDown);
-
-          // $(".supplierFilter").append("<option>" + results[i].supplier + "</option>")
         }
       });
     }
@@ -252,11 +249,52 @@ var listBrandItems = '<option selected="selected" value="0">- Select -</option>'
 
     });  
 
-
-
 // Run Query
 // ==========================================
   runTableQuery();
+
+//Dropdown functionality
+(function(document) {
+	'use strict';  
+  
+  var LightTableFilter = (function(Arr) {
+
+    var _select;
+
+function _onSelectEvent(e) {
+			_select = e.target;
+			var tables = document.getElementsByClassName(_select.getAttribute('data-table'));
+			Arr.forEach.call(tables, function(table) {
+				Arr.forEach.call(table.tBodies, function(tbody) {
+					Arr.forEach.call(tbody.rows, _filterSelect);
+				});
+			});
+    }
+
+function _filterSelect(row) {
+     
+     var text_select = row.textContent.toLowerCase(), val_select = _select.options[_select.selectedIndex].value.toLowerCase();
+     row.style.display = text_select.indexOf(val_select) === -1 ? 'none' : 'table-row';
+
+   }
+
+return {
+			init: function() {
+				var selects = document.getElementById('DLSupplier');
+				Arr.forEach.call(selects, function(select) {
+         select.onchange  = _onSelectEvent;
+				});
+			}
+		};
+  })(Array.prototype);
+
+	document.addEventListener('readystatechange', function() {
+		if (document.readyState === 'complete') {
+			LightTableFilter.init();
+		}
+	});
+
+})(document);
 
 </script>
 </html>

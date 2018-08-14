@@ -16,11 +16,11 @@ module.exports = function(app) {
   // ---------------------------------------------------------------------------
 
   app.get("/vip", function(req, res) {
-    res.sendFile(path.join(__dirname, "/../public/index.html"));
+    res.sendFile(path.join(__dirname, "/../index.html"));
   });
 
   // If no matching route is found default to home
   app.use(function(req, res) {
-    res.sendFile(path.join(__dirname, "/../public/index.html"));
+    res.sendFile(path.join(__dirname, "/../index.html"));
   });
 };
