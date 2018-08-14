@@ -14,6 +14,9 @@ var bodyParser = require("body-parser");
 // Tells node that we are creating an "express" server
 var app = express();
 
+// Sets an initial port. We"ll use this later in our listener
+var PORT = process.env.PORT || 8080;
+
 // BodyParser makes it possible for our server to interpret data sent to it.
 // The code below is pretty standard.
 app.use(bodyParser.json());
@@ -35,8 +38,8 @@ require("./routes/htmlRoutes")(app);
 // The below code effectively "starts" our server
 // ==============================================================================
 
-app.listen(process.env.PORT || 8080, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+server.listen(port, function() {
+  console.log("App is running on port " + port);
 });
 
 
