@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!--Bootstrap CSS-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <!--CSS-->
+  <style>
+    .jumbotronContainer {
+      text-align: center;
+    }
+    
+    .dropdown {
+      width: 100%;
+    }
+
+    #myInput{
+      margin-left: auto;
+      margin-right: auto;
+      width: 90%;
+      float: none;
+    }
+    .dataTable {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 1500px;
+      float: none;
+    }
+    #idColumn {
+      width: 5%;
+      text-align: center;
+    }
+    #supplierColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #typeColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #brandColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #cooColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #bpcColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #invoiceNumberColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #invoiceDateColumn {
+      width: 15%;
+      text-align: center;
+    }
+    #qtySoldColumn {
+      width: 10%;
+      text-align: center;
+    }
+    #dollarsSoldColumn {
+      width: 10%;
+      text-align: center;
+    }
+
+    .supplierRows {
+      text-align: center;
+    }
+  </style>
+
+  <!--Bootstrap JS-->
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <title>SQL-VIP</title>
+</head>
+<body>
+  <!--Navbar-->
+    <nav class="navbar navbar-light bg-light">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </nav>
+  <!--Jumbotron-->
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container jumbotronContainer">
+        <h1 class="display-4">September Supplier Sales</h1>
+        <p class="lead">Select on the Appropriate Dropdowns to select filter the September Sales Data.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-1">
+
+        </div>
+        <div class="col-lg-2">
+          <label for="DLSupplier" class="dropdownLabel">Supplier: </label>
+          <select id="DLSupplier" class="dropdown"></select>
+        </div>
+        <div class="col-lg-2">
+          <label for="DLType" class="dropdownLabel">Type: </label>
+          <select id="DLType" class="dropdown"></select>
+        </div>
+        <div class="col-lg-2">
+          <label for="DLBrand" class="dropdownLabel">Brand: </label>
+          <select id="DLBrand" class="dropdown"></select>
+        </div>
+        <div class="col-lg-2">
+          <label for="DLInvoiceDateBeginning" class="dropdownLabel">Start</label>  
+          <input type="date" id="start" class="dropdown" name="trip"
+            value="2017-09-01"
+            min="2017-09-01" max="2017-09-30" />
+        </div>
+        <div class="col-lg-2">
+          <label for="DLInvoiceDateEnding" class="dropdownLabel">End</label>
+          <input type="date" id="ending" class="dropdown" name="trip"
+            value="2017-09-30"
+            min="2017-09-01" max="2017-09-30" />
+        </div>
+        <div class="col-lg-1">
+
+        </div>
+      </div>
+    </div>
+  <!--Body-->
+    <div class="row">
+      <div class="col-lg dataTable">
+          <table id="supplierTable" border='1'>
+            <tr>
+                <th id="idColumn">ID</th>
+                <th id="supplierColumn">Supplier</th>
+                <th id="typeColumn">Type</th>
+                <th id="brandColumn">Brand</th>
+                <th id="cooColumn">Country of Origin</th>
+                <th id="bpcColumn">Bottles Per Case</th>
+                <th id="invoiceNumberColumn">Invoice Number</th>
+                <th id="invoiceDateColumn">Invoice Date</th>
+                <th id="qtySoldColumn">Quantity Sold</th>
+                <th id="dollarsSoldColumn">Dollars Sold</th>
+            </tr>
+          </table>
+      </div>
+    </div>
+  
+  
+</body>
+
+<script type="text/javascript">
+
+	function runTableQuery(){
+
+  // Location of the root page.
+    var currentURL = window.location.origin;
+
+  // The AJAX function
+    $.ajax({url: currentURL + "/jsondata", method: "GET"})
+      .done(function(results) {
+
+      // logging the URL for troubleshooting
+        console.log("------------------------------------");
+        console.log("URL: " + currentURL + "/jsondata");
+        console.log("------------------------------------");
+
+
+        console.log(results);
+        console.log("------------------------------------")
+
+      // Loop through and display each of the data points
+        for (var i=0; i<results.length; i++){
+
+        // Create the HTML table and populate with data
+          var vipData = $("<tr>");
+          vipData.addClass('supplierRows');
+          vipData.attr('id', i)
+          $('#supplierTable').append(vipData);
+
+          $("#" + i).append("<td>" + results[i].id + "</td><td>" + results[i].supplier + "</td><td>" + results[i].type + "</td><td>" + results[i].brand + "</td><td>" + results[i].countryOfOrigin + "</td><td>" + results[i].bottlesPerCase + "</td><td>" + results[i].invoiceNumber + "</td><td>" + results[i].invoiceDate + "</td><td>" + results[i].qtySold + "</td><td>$" + results[i].dollarsSold + "</td>");
+          
+        // Create the Supplier Dropdown and populate with data
+          // var selectSupplier = $("select");
+          // selectSupplier.addClass('supplierFilter');
+          // $('.jumbotron').append(dropDown);
+
+          // $(".supplierFilter").append("<option>" + results[i].supplier + "</option>")
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      var currentURL = window.location.origin;
+      var optionValues =[];
+      $.ajax({url: currentURL + "/jsondata", method: "GET"})
+      .done(function(results) {
+//Supplier Dropdown
+    var listSupplierItems = '<option selected="selected" value="0">- Select -</option>';
+    var uniqueSupplierNames = [];
+    for(i = 0; i< results.length; i++){    
+      if(uniqueSupplierNames.indexOf(results[i].supplier) === -1){
+        uniqueSupplierNames.push(results[i].supplier);        
+      }        
+    }
+    
+    for (var i = 0; i < uniqueSupplierNames.length; i++) {
+            listSupplierItems += "<option value='" + uniqueSupplierNames[i] + "'>" + uniqueSupplierNames[i] + "</option>";
+        }
+
+        $("#DLSupplier").html(listSupplierItems);
+
+//Type Dropdown
+    var listTypeItems = '<option selected="selected" value="0">- Select -</option>';
+    var uniqueTypeNames = [];
+    for(i = 0; i< results.length; i++){    
+      if(uniqueTypeNames.indexOf(results[i].type) === -1){
+        uniqueTypeNames.push(results[i].type);        
+      }        
+    }
+    
+    for (var i = 0; i < uniqueTypeNames.length; i++) {
+            listTypeItems += "<option value='" + uniqueTypeNames[i] + "'>" + uniqueTypeNames[i] + "</option>";
+        }
+
+        $("#DLType").html(listTypeItems);
+
+//Brand Dropdown
+var listBrandItems = '<option selected="selected" value="0">- Select -</option>';
+    var uniqueBrandNames = [];
+    for(i = 0; i< results.length; i++){    
+      if(uniqueBrandNames.indexOf(results[i].brand) === -1){
+        uniqueBrandNames.push(results[i].brand);        
+      }        
+    }
+    
+    for (var i = 0; i < uniqueBrandNames.length; i++) {
+            listBrandItems += "<option value='" + uniqueBrandNames[i] + "'>" + uniqueBrandNames[i] + "</option>";
+        }
+
+        $("#DLBrand").html(listBrandItems);
+      })
+
+    });  
+
+
+
+// Run Query
+// ==========================================
+  runTableQuery();
+
+</script>
+</html>

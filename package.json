@@ -1,0 +1,24 @@
+{
+  "name": "sql-vip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vip_db_connection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfenness/sql-vip.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cfenness/sql-vip/issues"
+  },
+  "homepage": "https://github.com/cfenness/sql-vip#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mysql": "^2.16.0"
+  }
+}
